@@ -1,6 +1,8 @@
 package com.example.finalproject;
 
-public class GoogleBookModel {
+import java.io.Serializable;
+
+public class GoogleBookModel implements Serializable {
     private String title, authors, subtitle, description, publisher;
 
     GoogleBookModel()

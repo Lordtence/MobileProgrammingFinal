@@ -6,7 +6,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class SearchedActivity extends AppCompatActivity {
+import java.io.Serializable;
+
+public class SearchedActivity extends AppCompatActivity implements Serializable {
     private GoogleBookModel book;
     private TextView mTitleText;
     private TextView mAuthorText;
@@ -18,11 +20,11 @@ public class SearchedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_searched);
+        // get intent
         Intent intent = getIntent();
 
-        // TODO: Get the book object from the intent
-        //GoogleBookModel book = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
-        getIntent().getSerializableExtra("MyClass");
+        // implement intent into book object
+        book = (GoogleBookModel)intent.getSerializableExtra("MyClass");
 
         // Set the text fields to the information from Book object
         mTitleText = findViewById(R.id.title_text);

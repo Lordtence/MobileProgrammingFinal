@@ -5,14 +5,14 @@ import java.util.Collections;
 import java.util.List;
 
 public class BookListTransfer extends MainActivity {
-    private List<GoogleBookModel> bookList;
+    private List<GoogleBookModel> TbookList;
     BookListTransfer(List<GoogleBookModel> inputBookList){
-        bookList = new ArrayList<>();
-        bookList.addAll(inputBookList);
+        TbookList = new ArrayList<>();
+        TbookList.addAll(inputBookList);
     }
 
     public void setMainList()
     {
-        setBookList(bookList);
+        setBookList(TbookList);
     }
 }

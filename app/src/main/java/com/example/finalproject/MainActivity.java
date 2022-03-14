@@ -18,16 +18,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements ItemAdapter.ListItemClickListener {
+public class MainActivity extends AppCompatActivity implements ItemAdapter.ListItemClickListener, Serializable {
 
     private static final int NUM_LIST_ITEMS = 150;
     private FetchBook searchedBook;
-    private List<GoogleBookModel> bookList = new ArrayList<>();
+    private List<GoogleBookModel> MainBookList = new ArrayList<>();
 
     private ItemAdapter mAdapter;
     private RecyclerView mNumbersList;
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.ListI
         mNumbersList.setLayoutManager(layoutManager);
         mNumbersList.setHasFixedSize(true);
         // PASS LIST OF BOOKS INTO ITEMADAPTER CREATING RECYCLE VIEW
-        mAdapter = new ItemAdapter(this, NUM_LIST_ITEMS, bookList);
+        mAdapter = new ItemAdapter(this, NUM_LIST_ITEMS, MainBookList);
         mNumbersList.setAdapter(mAdapter);
     }
 
@@ -60,12 +61,11 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.ListI
     public void onListItemClick(int clickedItemIndex, View itemView) {
         itemView.setBackgroundColor(Color.RED);
         Intent intent = new Intent(MainActivity.this, SearchedActivity.class);
-
         // TODO: Pass the specefic book object through intent (maybe through implementing "serailizable" interface?)
         // get the specefic book object that was clicked, call the intent passing the clicked book object
-        GoogleBookModel book = bookList.get(clickedItemIndex);
-        //To pass book object to intent
-        //intent.putExtra("MyClass", book);
+        GoogleBookModel book = MainBookList.get(clickedItemIndex);
+        //To pass:
+        intent.putExtra("MainActivity", book);
 
         startActivity(intent);
     }
@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.ListI
     // todo: which was clicked at a cickedItemIndex.
 
 
-    // TODO: app crashes when search button is clicked, try to go line by line to find a problem
     // this runs when search button is clicked
     public void searchBooks(View view) {
         // Get the search string from input
@@ -89,18 +88,19 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.ListI
         new FetchBook(mTitleText, mAuthorText).execute(queryString);
     }
 
-    public void createRecycleView(){
-        Log.d("IMPORTANT IMPORTANT: ", bookList.toString());
+    public void rebindRecycleView(){
+        // notify the recycleview to change to search results
+        //mAdapter.notifyDataSetChanged(); // TODO: mAdapter is null,find way to rebind recycle view
     }
 
     public void setBookList(List<GoogleBookModel> inputList)
     {
         // sets the booklist for main
-        bookList.addAll(inputList);
+        this.MainBookList.addAll(inputList);
         // call to create recycleview
-        createRecycleView();
-
+        rebindRecycleView();
     }
+
     // TODO: Goal of searchBooks, it will first call FetchBook to search for books with input given, then
     // todo: retrieve the list of GoogleBookModels from Fetchbook. It should then, create the RecycleView
     // todo: passing through the bookList of GoogleBookModels in order to create the search results

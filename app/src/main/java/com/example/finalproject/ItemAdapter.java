@@ -79,7 +79,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             holder.itemView.setBackgroundColor(Color.WHITE);
 
         Log.d(TAG, "#" + position);
-        holder.bind(position);
+        holder.bind(position); // TODO: THIS STATEMENT ADDS TEXT TO THE RECYCLE VIEWS
     }
 
     /**
@@ -120,8 +120,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
          */
         // TODO: THIS IS WHAT SETS THE TEXT IN RECYCLE VIEW
         void bind(int listIndex) {
-            GoogleBookModel element = mBookList.get(listIndex);
-            listItemNumberView.setText(element.getTitle());
+            // if the book list is empty
+            if(mBookList.isEmpty())listItemNumberView.setText(String.valueOf(listIndex));
+            else{
+                // if booklist is set
+                GoogleBookModel element = mBookList.get(listIndex);
+                listItemNumberView.setText(element.getTitle());
+            }
         }
 
         /**
