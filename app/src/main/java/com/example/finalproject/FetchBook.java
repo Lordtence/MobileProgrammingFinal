@@ -15,7 +15,6 @@ public class FetchBook extends AsyncTask<String, Void, String> {
 
     private WeakReference<TextView> mTitleText;
     private WeakReference<TextView> mAuthorText;
-    private List<GoogleBookModel> bookList = new ArrayList<>(); // list of bookmodels
 
     @Override
     protected String doInBackground(String... strings) {
@@ -25,74 +24,65 @@ public class FetchBook extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        Log.d("IMPORTANT EXCECUTE: ", bookList.toString());
+        List<GoogleBookModel> bookList = new ArrayList<GoogleBookModel>();
         try {
             // Convert the response into a JSON object.
             JSONObject jsonObject = new JSONObject(s);
             // Get the JSONArray of book items.
             JSONArray itemsArray = jsonObject.getJSONArray("items");
 
+
             // Initialize iterator and results fields.
             int i = 0;
             String title = null;
             String authors = null;
-            // TODO: something is somehow wrong with these other variables despite being the same as title and authors (?)
-            String subtitle = null;
-            String description = null;
-            String publisher = null;
 
             // Look for results in the items array, exiting
-            // check to see it has authors title subtitle description and publisher
-            // TODO: this might be needed for the loop? && subtitle == null && description == null && publisher == null
-            while (i < itemsArray.length() &&
-                    (authors == null && title == null)) {
+            // when both the title and author
+            // are found or when all items have been checked.
+            while (i < itemsArray.length()) {
                 // Get the current item information.
-                GoogleBookModel bookModel = new GoogleBookModel();
                 JSONObject book = itemsArray.getJSONObject(i);
                 JSONObject volumeInfo = book.getJSONObject("volumeInfo");
+                // create new bookmodel
+                GoogleBookModel bookModel = new GoogleBookModel();
 
-                // Try to get the JSON data from current item
+                // Try to get the author and title from the current item,
+                // catch if either field is empty and move on.
                 try {
                     title = volumeInfo.getString("title");
                     authors = volumeInfo.getString("authors");
-                    subtitle = volumeInfo.getString("subtitle");
-                    description = volumeInfo.getString("description");
-                    publisher = volumeInfo.getString("publisher");
-                    bookModel.addTitle(title);
-                    bookModel.addAuthors(authors);
-                    bookModel.addSubtitle(subtitle);
-                    bookModel.addDescription(description);
-                    bookModel.addPublisher(publisher);
-                    addBookToList(bookModel); // add JSON this object with the JSON data to a LIST OF OBJECTS
-                    Log.d("IMPORTANT book: ", bookList.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                // Move to the next item
+                // Add values to book model
+                bookModel.addTitle(title);
+                bookModel.addAuthors(authors);
+                // add bookmodel to list
+                bookList.add(bookModel);
+                // Move to the next item.
                 i++;
             }
+
         } catch (Exception e) {
-            // getting search result failed. Maybe change to a toast message?
-            mTitleText.get().setText(R.string.no_response);
+            // If onPostExecute does not receive a proper JSON string,
+            // update the UI to show failed results.
+            mTitleText.get().setText("No Results");
             mAuthorText.get().setText("");
         }
-        Log.d("IMPORTANT DONE: ", bookList.toString());
+        transferBooks(bookList);
     }
 
-    public void addBookToList(GoogleBookModel addedBook)
+    public void transferBooks(List<GoogleBookModel> inputBookList)
     {
-        bookList.add(addedBook);
-        Log.d("IMPORTANT ADDED: ", bookList.toString());
-    }
-
-    public List<GoogleBookModel> getBookList()
-    {
-        return bookList;
+        // transfer book list to other class
+        BookListTransfer transferList = new BookListTransfer(inputBookList);
+        // this call sets the list in Main Activity
+        transferList.setMainList();
     }
 
     FetchBook(TextView titleText, TextView authorText) {
-        Log.d("IMPORTANT STARTING: ", bookList.toString());
         this.mTitleText = new WeakReference<>(titleText);
         this.mAuthorText = new WeakReference<>(authorText);
     }

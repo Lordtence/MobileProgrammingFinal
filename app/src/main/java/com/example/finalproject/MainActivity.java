@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ItemAdapter.ListItemClickListener {
@@ -44,6 +45,14 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.ListI
         mTitleText = (TextView)findViewById(R.id.titleText);
         mAuthorText = (TextView)findViewById(R.id.authorText);
 
+        // CREATE RECYCLE VIEW
+        mNumbersList = (RecyclerView) findViewById(R.id.rv_numbers);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mNumbersList.setLayoutManager(layoutManager);
+        mNumbersList.setHasFixedSize(true);
+        // PASS LIST OF BOOKS INTO ITEMADAPTER CREATING RECYCLE VIEW
+        mAdapter = new ItemAdapter(this, NUM_LIST_ITEMS, bookList);
+        mNumbersList.setAdapter(mAdapter);
     }
 
     // overiding on click from ItemAdapter so that this runs when an item is clicked
@@ -77,21 +86,20 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.ListI
                     InputMethodManager.HIDE_NOT_ALWAYS);
         }
         // create a new FETCH or SEARCH for the input
-        searchedBook = new FetchBook(mTitleText, mAuthorText);
-        searchedBook.execute(queryString);
+        new FetchBook(mTitleText, mAuthorText).execute(queryString);
+    }
 
-        // CREATE RECYCLE VIEW
-        mNumbersList = (RecyclerView) findViewById(R.id.rv_numbers);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mNumbersList.setLayoutManager(layoutManager);
-        mNumbersList.setHasFixedSize(true);
-
-        // copy booklist from fetchedbook into this variable
-        bookList.addAll(searchedBook.getBookList());
+    public void createRecycleView(){
         Log.d("IMPORTANT IMPORTANT: ", bookList.toString());
-        // PASS LIST OF BOOKS INTO ITEMADAPTER CREATING RECYCLE VIEW
-        mAdapter = new ItemAdapter(this, NUM_LIST_ITEMS, bookList);
-        mNumbersList.setAdapter(mAdapter);
+    }
+
+    public void setBookList(List<GoogleBookModel> inputList)
+    {
+        // sets the booklist for main
+        bookList.addAll(inputList);
+        // call to create recycleview
+        createRecycleView();
+
     }
     // TODO: Goal of searchBooks, it will first call FetchBook to search for books with input given, then
     // todo: retrieve the list of GoogleBookModels from Fetchbook. It should then, create the RecycleView
