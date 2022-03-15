@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.io.Serializable;
 
 public class SearchedActivity extends AppCompatActivity implements Serializable {
-    private GoogleBookModel book;
+    VolumeInfo recievedVolumeInfo;
     private TextView mTitleText;
     private TextView mAuthorText;
     private TextView mSubtitleText;
@@ -24,23 +24,23 @@ public class SearchedActivity extends AppCompatActivity implements Serializable 
         Intent intent = getIntent();
 
         // implement intent into book object
-        book = (GoogleBookModel)intent.getSerializableExtra("MyClass");
+        recievedVolumeInfo = (VolumeInfo)intent.getSerializableExtra("MainActivity");
 
         // Set the text fields to the information from Book object
         mTitleText = findViewById(R.id.title_text);
-        mTitleText.setText(book.getTitle());
+        mTitleText.setText(recievedVolumeInfo.getTitle());
 
         mAuthorText = findViewById(R.id.authors_text);
-        mAuthorText.setText(book.getAuthors());
+        mAuthorText.setText("book.getAuthors()");
 
         mSubtitleText = findViewById(R.id.subtitle_text);
-        mSubtitleText.setText(book.getSubtitle());
+        mSubtitleText.setText(recievedVolumeInfo.getPublishedDate());
 
         mDescriptionText = findViewById(R.id.description_text);
-        mDescriptionText.setText(book.getDescription());
+        mDescriptionText.setText(recievedVolumeInfo.getDescription());
 
         mPublisherText = findViewById(R.id.publisher_text);
-        mPublisherText.setText(book.getPublisher());
+        mPublisherText.setText(recievedVolumeInfo.getPublisher());
 
     }
 }

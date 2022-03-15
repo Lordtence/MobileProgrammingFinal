@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.ListI
 
     private static final int NUM_LIST_ITEMS = 21;
     private static final int MAX_RESULTS = 21;
-    private List<GoogleBookModel> MainBookList;
+
 
     private ItemAdapter mAdapter;
     private RecyclerView mNumbersList;
@@ -59,8 +59,6 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.ListI
 
         mBookInput = (EditText)findViewById(R.id.bookInput);
         // create empty booklist
-        MainBookList = new ArrayList<>();
-        MainBookList.clear();
 
         // CREATE RECYCLE VIEW
         mNumbersList = (RecyclerView) findViewById(R.id.rv_numbers);
@@ -78,9 +76,10 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.ListI
         Intent intent = new Intent(MainActivity.this, SearchedActivity.class);
         // TODO: Pass the specefic book object through intent (maybe through implementing "serailizable" interface?)
         // get the specefic book object that was clicked, call the intent passing the clicked book object
-        GoogleBookModel book = MainBookList.get(clickedItemIndex);
+        Item chosenBook = volumeInfoList.get(clickedItemIndex);
+        VolumeInfo intendedVolumeiInfo = chosenBook.getVolumeInfo();
         //To pass:
-        intent.putExtra("MainActivity", book);
+        intent.putExtra("MainActivity", intendedVolumeiInfo);
 
         startActivity(intent);
     }
