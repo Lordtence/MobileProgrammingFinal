@@ -1,5 +1,6 @@
 package com.example.finalproject;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
@@ -18,9 +19,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
     private static final String TAG = ItemAdapter.class.getSimpleName();
     private static int viewHolderCount;
+    private List<Item> volumeInfoList;
 
     private int mNumberItems;
-    private List<GoogleBookModel> mBookList = new ArrayList<>();
 
     // creating interface for listitemclicklistener, only has 1 method
     public interface ListItemClickListener{
@@ -34,14 +35,17 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
      * path of booklist: Created in Fetchbook -> MainActicity -> ItemAdapter
      * @param listener
      * @param numberOfItems
-     * @param inputList
      */
-    public ItemAdapter(ListItemClickListener listener, int numberOfItems, List<GoogleBookModel> inputList) {
+    public ItemAdapter(ListItemClickListener listener, int numberOfItems) {
         mNumberItems = numberOfItems;
         viewHolderCount = 0;
         myOnClickListener = listener;
         // copy input list into book list
-        mBookList.addAll(inputList);
+    }
+
+    public void setVolumeInfo(List<Item> volumeInfoList) {
+        this.volumeInfoList = volumeInfoList;
+        notifyDataSetChanged();
     }
 
     /**
@@ -72,14 +76,16 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
      */
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
-
+        VolumeInfo volumeInfo = null;
         if(position % 2 == 0)
             holder.itemView.setBackgroundColor(Color.LTGRAY);
         else
             holder.itemView.setBackgroundColor(Color.WHITE);
-
         Log.d(TAG, "#" + position);
-        holder.bind(position); // TODO: THIS STATEMENT ADDS TEXT TO THE RECYCLE VIEWS
+        if(volumeInfoList != null){
+            volumeInfo = this.volumeInfoList.get(position).getVolumeInfo();
+        }
+        holder.bind(position, volumeInfo); // TODO: THIS STATEMENT ADDS TEXT TO THE RECYCLE VIEWS
     }
 
     /**
@@ -119,13 +125,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
          * @param listIndex
          */
         // TODO: THIS IS WHAT SETS THE TEXT IN RECYCLE VIEW
-        void bind(int listIndex) {
+        void bind(int listIndex, VolumeInfo inputInfo) {
             // if the book list is empty
-            if(mBookList.isEmpty())listItemNumberView.setText(String.valueOf(listIndex));
+            if(volumeInfoList == null)listItemNumberView.setText(String.valueOf(listIndex));
             else{
                 // if booklist is set
-                GoogleBookModel element = mBookList.get(listIndex);
-                listItemNumberView.setText(element.getTitle());
+                listItemNumberView.setText(inputInfo.getTitle());
             }
         }
 
