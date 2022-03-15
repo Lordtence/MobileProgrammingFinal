@@ -2,6 +2,7 @@ package com.example.finalproject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,5 +45,10 @@ public class SearchedActivity extends AppCompatActivity implements Serializable 
         mPublisherText = findViewById(R.id.publisher_text);
         mPublisherText.setText(recievedVolumeInfo.getPublisher());
 
+    }
+
+    public void onClick(View view) {
+        Intent intent = new Intent(SearchedActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 }
