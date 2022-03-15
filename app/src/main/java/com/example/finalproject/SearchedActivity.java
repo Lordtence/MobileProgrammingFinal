@@ -34,7 +34,7 @@ public class SearchedActivity extends AppCompatActivity implements Serializable 
 
         mAuthorText = findViewById(R.id.authors_text);
         List<String> setOfAuthors = recievedVolumeInfo.getAuthors();
-        if(setOfAuthors == null || setOfAuthors.isEmpty())mAuthorText.setText(setOfAuthors.get(0));
+        mAuthorText.setText(setOfAuthors.get(0));
 
         mSubtitleText = findViewById(R.id.subtitle_text);
         mSubtitleText.setText(recievedVolumeInfo.getPublishedDate());
