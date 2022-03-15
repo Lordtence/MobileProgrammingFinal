@@ -25,16 +25,16 @@ public class SearchedActivity extends AppCompatActivity implements Serializable 
         // get intent
         Intent intent = getIntent();
 
-        // implement intent into book object
+        // implement intent into volume info field
         recievedVolumeInfo = (VolumeInfo)intent.getSerializableExtra("MainActivity");
 
-        // Set the text fields to the information from Book object
+        // Set the text fields to the information from volume info
         mTitleText = findViewById(R.id.title_text);
         mTitleText.setText(recievedVolumeInfo.getTitle());
 
         mAuthorText = findViewById(R.id.authors_text);
         List<String> setOfAuthors = recievedVolumeInfo.getAuthors();
-        mAuthorText.setText(setOfAuthors.get(0));
+        if(setOfAuthors == null || setOfAuthors.isEmpty())mAuthorText.setText(setOfAuthors.get(0));
 
         mSubtitleText = findViewById(R.id.subtitle_text);
         mSubtitleText.setText(recievedVolumeInfo.getPublishedDate());
@@ -48,6 +48,7 @@ public class SearchedActivity extends AppCompatActivity implements Serializable 
     }
 
     public void onClick(View view) {
+        // bring us back to main activity
         Intent intent = new Intent(SearchedActivity.this, MainActivity.class);
         startActivity(intent);
     }

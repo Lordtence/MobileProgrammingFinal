@@ -39,14 +39,11 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements ItemAdapter.ListItemClickListener, Serializable {
 
+    // THESE NUMBERS HAVE TO BE EQUAL
     private static final int NUM_LIST_ITEMS = 21;
     private static final int MAX_RESULTS = 21;
 
-
     private ItemAdapter mAdapter;
-    private RecyclerView mNumbersList;
-
-    // BOOK FETCH VARS
     private EditText mBookInput;
     private ApiService api;
     private List<Item> volumeInfoList;
@@ -55,13 +52,15 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.ListI
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // initiate API
         api = RetroClient.getApiService();
 
+        // set bookInput field
         mBookInput = (EditText)findViewById(R.id.bookInput);
-        // create empty booklist
 
         // CREATE RECYCLE VIEW
-        mNumbersList = (RecyclerView) findViewById(R.id.rv_numbers);
+        RecyclerView mNumbersList = (RecyclerView) findViewById(R.id.rv_numbers);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mNumbersList.setLayoutManager(layoutManager);
         mNumbersList.setHasFixedSize(true);
@@ -72,63 +71,54 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.ListI
     // overiding on click from ItemAdapter so that this runs when an item is clicked
     @Override
     public void onListItemClick(int clickedItemIndex, View itemView) {
+        // if there is no recycle view set, do nothing
         if(volumeInfoList == null) return;
+        // make background dark gray for clicked view
         itemView.setBackgroundColor(Color.DKGRAY);
+        // intent to switch activity to SearchedActivity
         Intent intent = new Intent(MainActivity.this, SearchedActivity.class);
-        // TODO: Pass the specefic book object through intent (maybe through implementing "serailizable" interface?)
-        // get the specefic book object that was clicked, call the intent passing the clicked book object
-        Item chosenBook = volumeInfoList.get(clickedItemIndex);
-        VolumeInfo intendedVolumeiInfo = chosenBook.getVolumeInfo();
-        //To pass:
-        intent.putExtra("MainActivity", intendedVolumeiInfo);
 
+        // store the Data inside the volumeInfoList at the index it was clicked to a new item
+        Item chosenBook = volumeInfoList.get(clickedItemIndex);
+        // Use that item to then get the VolumeInfo which has the "authors description" etc
+        VolumeInfo intendedVolumeiInfo = chosenBook.getVolumeInfo();
+        // Directly pass the Volume Info to the Searched Activity
+        intent.putExtra("MainActivity", intendedVolumeiInfo);
+        // switch activity
         startActivity(intent);
     }
-    // TODO: Goal of onListItemClick is to call to a new activity, passing an intent of the GoogleBookModel object,
-    // todo: which was clicked at a cickedItemIndex.
 
-    //When you press the search button, you query the endpoint, generate a List of book models, assign it to the adapter, and refresh the adapter.
+    // When you press the search button, you query the endpoint, generate a List of book models, assign it to the adapter, and refresh the adapter.
     // this runs when search button is clicked
     public void searchBooks(View view) {
-        // query the endpoint
-        // private static final String BOOK_BASE_URL =  "https://www.googleapis.com/books/v1/volumes?";
-        // Uri builtURI = Uri.parse(BOOK_BASE_URL).buildUpon()
-        //                    .appendQueryParameter(QUERY_PARAM, queryString)
-        //                    .appendQueryParameter(MAX_RESULTS, "10")
-        //                    .appendQueryParameter(PRINT_TYPE, "books")
-        //                    .build();
+        // Get the bookInput text for the query
         String queryString = mBookInput.getText().toString();
         InputMethodManager inputManager = (InputMethodManager)
                 getSystemService(Context.INPUT_METHOD_SERVICE);
-
+        // hide keyboard after typing
         if (inputManager != null ) {
             inputManager.hideSoftInputFromWindow(view.getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
         }
-
+        // ---- CALLING THE API TO SEARCH FOR BOOK
+        // query JSON with the String, MAX RESULTS is how many search results are shown
         Call<BookResponse> call = api.getMyJSON(queryString, MAX_RESULTS);
         call.enqueue(new Callback<BookResponse>() {
                          @Override
                          public void onResponse(Call<BookResponse> call, Response<BookResponse> response) {
+                             // call was successful
                              if (response.isSuccessful()) {
+                                 // Get the results and put them into the volumeInfoList
                                  volumeInfoList = response.body().getItems();
+                                 // Pass the volumeInfoList data into the RecycleView
                                  mAdapter.setVolumeInfo(volumeInfoList);
                              }
                          }
-
+                        // call failed
                          @Override
                          public void onFailure(Call<BookResponse> call, Throwable t) {
                          }
                      });
-                         // generate a List of book models
-
-        // set adapter to have booklist
-
-        //refresh adapter
     }
-
-    // TODO: Goal of searchBooks, it will first call FetchBook to search for books with input given, then
-    // todo: retrieve the list of GoogleBookModels from Fetchbook. It should then, create the RecycleView
-    // todo: passing through the bookList of GoogleBookModels in order to create the search results
 }
 

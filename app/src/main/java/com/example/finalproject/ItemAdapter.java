@@ -31,8 +31,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     final private ListItemClickListener myOnClickListener;
 
     /**
-     * ItemAdapter constructor. Note it also takes in the inputList which is the list of books found in FetchBook.java
-     * path of booklist: Created in Fetchbook -> MainActicity -> ItemAdapter
+     * ItemAdapter constructor
      * @param listener
      * @param numberOfItems
      */
@@ -122,9 +121,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
         /**
          * Sets the actual texts into the recycle view element, using the booklist element and getting the title
-         * @param listIndex
+         * @param listIndex if you want to show the index of the view
+         * @param inputInfo to get info on an object
          */
-        // TODO: THIS IS WHAT SETS THE TEXT IN RECYCLE VIEW
         void bind(int listIndex, VolumeInfo inputInfo) {
             // if the book list is empty
             if(volumeInfoList == null)listItemNumberView.setText("");
