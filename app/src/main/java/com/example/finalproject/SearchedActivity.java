@@ -7,6 +7,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class SearchedActivity extends AppCompatActivity implements Serializable {
     VolumeInfo recievedVolumeInfo;
@@ -31,7 +32,8 @@ public class SearchedActivity extends AppCompatActivity implements Serializable 
         mTitleText.setText(recievedVolumeInfo.getTitle());
 
         mAuthorText = findViewById(R.id.authors_text);
-        mAuthorText.setText("book.getAuthors()");
+        List<String> setOfAuthors = recievedVolumeInfo.getAuthors();
+        mAuthorText.setText(setOfAuthors.get(0));
 
         mSubtitleText = findViewById(R.id.subtitle_text);
         mSubtitleText.setText(recievedVolumeInfo.getPublishedDate());
