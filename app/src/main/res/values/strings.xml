@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">FinalProject</string>
-    <string name="instructions">Final Project Search App</string>
+    <string name="app_name">Search App</string>
+    <string name="instructions">Search for Book:</string>
     <string name="button_text">Search</string>
     <string name="input_hint">Type here</string>
     <string name="no_response">No response found</string>
