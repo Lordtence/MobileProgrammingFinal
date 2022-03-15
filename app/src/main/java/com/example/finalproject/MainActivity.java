@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.ListI
     // overiding on click from ItemAdapter so that this runs when an item is clicked
     @Override
     public void onListItemClick(int clickedItemIndex, View itemView) {
+        if(volumeInfoList == null) return;
         itemView.setBackgroundColor(Color.DKGRAY);
         Intent intent = new Intent(MainActivity.this, SearchedActivity.class);
         // TODO: Pass the specefic book object through intent (maybe through implementing "serailizable" interface?)

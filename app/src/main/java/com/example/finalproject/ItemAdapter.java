@@ -127,7 +127,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         // TODO: THIS IS WHAT SETS THE TEXT IN RECYCLE VIEW
         void bind(int listIndex, VolumeInfo inputInfo) {
             // if the book list is empty
-            if(volumeInfoList == null)listItemNumberView.setText(String.valueOf(listIndex));
+            if(volumeInfoList == null)listItemNumberView.setText("");
             else{
                 // if booklist is set
                 listItemNumberView.setText(inputInfo.getTitle());
